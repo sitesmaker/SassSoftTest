@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import Form from './components/Form.vue'
+
+const addRow = ():void => {
+  
+};
 </script>
 
 <template>
-  <v-btn prepend-icon="$vuetify">
-    Button
-  </v-btn>
-  <div class="flex flex-col text">
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="flex items-center gap-x-[10px]">
+    <h2>Учётные записи</h2>
+    <v-btn
+      icon="mdi-plus"
+      @click="addRow"
+      />
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <Form />
 </template>
 
 <style scoped lang="scss">
