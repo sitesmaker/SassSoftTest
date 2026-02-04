@@ -1,11 +1,25 @@
 <script setup lang="ts">
 import FormRow from '@/components/FormRow.vue';
+import { useFormRowsStore } from '@/stores/formRows';
+import { onMounted } from 'vue';
+
+const formRowsStore = useFormRowsStore();
+
+onMounted(() => {
+  formRowsStore.loadFromLocalStorage();
+})
 </script>
 
 <template>
-  <form class="form">
-    <FormRow v-for="idx in 4" :key="idx" />
-  </form>
+  <v-form class="form">
+    <FormRow
+      v-for="(row, idx) in formRowsStore.formRows"
+      :key="idx"
+      :rowData="row"
+      @update="formRowsStore.updateRow(idx, $event)"
+      @remove="formRowsStore.removeRow(idx)"
+    />
+  </v-form>
 </template>
 
 <style scoped>

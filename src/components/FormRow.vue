@@ -1,24 +1,16 @@
 <script setup lang="ts">
-import { reactive, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { FormDataRow } from '@/types/FormDataRow';
+import { useFormRowsStore } from '@/stores/formRows';
 
-interface FormDataRow {
-  label: { text: string }[],
-  type: string,
-  login: string,
-  password: string | null,
-}
+const formRowsStore = useFormRowsStore();
 
-const selectOptions:string[] = [
-  'Локальная',
-  'LDAP',
-];
+const props = defineProps<{
+  index: number,
+  rowData: FormDataRow,
+}>();
 
-const formData = reactive<FormDataRow>({
-  label: [],
-  type: selectOptions[0] as string,
-  login: '',
-  password: null,
-});
+const formData = ref<FormDataRow>({ ...props.rowData });
 
 const parseLabel = (value: string): { text: string }[] => {
   if (!value?.trim()) return [];
@@ -31,15 +23,60 @@ const parseLabel = (value: string): { text: string }[] => {
 };
 
 const labelDisplay = computed({
-  get: () => formData.label.map(item => item.text).join('; '),
+  get: () => formData.value.label.map(item => item.text).join('; '),
   set: (newValue: string) => {
-    formData.label = parseLabel(newValue);
+    formData.value.label = parseLabel(newValue);
   }
 });
 
 const changeLabel = (newValue: string) => {
-  formData.label = parseLabel(newValue);
+  formData.value.label = parseLabel(newValue);
 };
+
+const isLocal = computed(():boolean => {
+  return formData.value.type == formRowsStore.defaultType
+})
+
+const loginRules = computed(() => [
+  (v: string) => !!v || 'Логин обязателен',
+  (v: string) => v.length >= 3 || 'Минимум 3 символа',
+  (v: string) => v.length <= 50 || 'Максимум 50 символов',
+]);
+
+const passwordRules = computed(() => {
+  if (!isLocal.value) return [];
+  return [
+    (v: string) => !!v || 'Пароль обязателен',
+    (v: string) => v.length >= 8 || 'Минимум 8 символов',
+    (v: string) => v.length <= 100 || 'Максимум 50 символов',
+  ];
+});
+
+const isLoginValid = computed(() => {
+  const value = formData.value.login;
+  return loginRules.value.every(rule => rule(value) === true);
+});
+
+const isPasswordValid = computed(() => {
+  if (!isLocal.value) return true;
+  const value = formData.value.password;
+  return passwordRules.value.every(rule => rule(value) === true);
+});
+
+const isFormValid = computed(() => isLoginValid.value && isPasswordValid.value);
+
+watch(
+  () => [formData.value.label, formData.value.type, isFormValid.value],
+  ([, , isValid]) => {
+    if (isValid && !isLocal.value) {
+      formData.value.password = null;
+      formRowsStore.updateRow(formData.value);
+      formRowsStore.saveToLocalStorage();
+    } else if(isValid) {
+      formRowsStore.updateRow(formData.value);
+      formRowsStore.saveToLocalStorage();
+    }
+})
 </script>
 
 <template>
@@ -52,17 +89,22 @@ const changeLabel = (newValue: string) => {
         <v-select
             v-model="formData.type"
             label="Select"
-            :items="selectOptions"
+            :items="formRowsStore.selectOptions"
         />
         <v-text-field
             v-model="formData.login"
             label="Логин"
+            :rules="loginRules"
+            required
         />
         <v-text-field
-            v-if="formData.type == 'Локальная'"
+            v-if="isLocal"
             v-model="formData.password"
             label="Пароль"
             type="password"
+            :rules="passwordRules"
+            required
         />
+        <button @click.prevent="formRowsStore.removeRow(formData.login)">delete</button>
     </div>
 </template>

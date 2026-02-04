@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
-import { fileURLToPath, URL } from 'url'
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
@@ -12,7 +11,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@': '/src',
     },
   },
 })

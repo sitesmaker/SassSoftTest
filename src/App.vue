@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import Form from './components/Form.vue'
+import { useFormRowsStore } from '@/stores/formRows';
 
-const addRow = ():void => {
-  
-};
+const formRowsStore = useFormRowsStore();
 </script>
 
 <template>
@@ -11,7 +10,7 @@ const addRow = ():void => {
     <h2>Учётные записи</h2>
     <v-btn
       icon="mdi-plus"
-      @click="addRow"
+      @click="formRowsStore.addRow()"
       />
   </div>
   <Form />
