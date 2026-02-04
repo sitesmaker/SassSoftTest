@@ -9,4 +9,19 @@ export default createVuetify({
     icons: {
         defaultSet: 'mdi',
     },
+    theme: {
+        defaultTheme: 'dark',
+        themes: {
+        dark: {
+            dark: true,
+            colors: {
+            primary: '#646cff',
+            surface: '#2b2b2b',
+            'on-surface': '#ffffff',
+            'surface-variant': '#3a3a3a',
+            'on-surface-variant': '#ffffff',
+            },
+        },
+        },
+    },
 })

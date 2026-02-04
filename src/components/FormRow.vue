@@ -10,6 +10,12 @@ const props = defineProps<{
   rowData: FormDataRow,
 }>();
 
+const isPasswordVisible = ref(false);
+
+const togglePasswordVisibility = () => {
+  isPasswordVisible.value = !isPasswordVisible.value;
+};
+
 const formData = ref<FormDataRow>({ ...props.rowData });
 
 const parseLabel = (value: string): { text: string }[] => {
@@ -80,31 +86,52 @@ watch(
 </script>
 
 <template>
-    <div class="flex form__row">
+    <div class="form__row flex gap-x-[10px]">
         <v-text-field
-            @input="labelDisplay"
-            @update:modelValue="changeLabel"
-            label="Метка (разделяйте ;)"
+          class="w-1/4"
+          variant="outlined"
+          color="primary"
+          @input="labelDisplay"
+          @update:modelValue="changeLabel"
         />
         <v-select
-            v-model="formData.type"
-            label="Select"
-            :items="formRowsStore.selectOptions"
+          class="w-1/4"
+          v-model="formData.type"
+          variant="outlined"
+          color="primary"
+          :items="formRowsStore.selectOptions"
         />
         <v-text-field
-            v-model="formData.login"
-            label="Логин"
-            :rules="loginRules"
-            required
+          :class="[isLocal ? 'w-1/4' : 'w-2/4']"
+          v-model="formData.login"
+          :rules="loginRules"
+          required
+          variant="outlined"
+          color="primary"
         />
         <v-text-field
             v-if="isLocal"
+            class="w-1/4"
             v-model="formData.password"
-            label="Пароль"
-            type="password"
+            :type="isPasswordVisible ? 'text' : 'password'"
+            :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+            @click:append-inner="togglePasswordVisibility"
             :rules="passwordRules"
             required
+            variant="outlined"
+            color="primary"
         />
-        <button @click.prevent="formRowsStore.removeRow(formData.login)">delete</button>
+        <v-btn
+          class="w-[48px]"
+          color="error"
+          icon="mdi-delete"
+          @click.prevent="formRowsStore.removeRow(formData.login)"
+        />
     </div>
 </template>
+
+<style lang="scss">
+.form__row {
+  transition: all ease-in-out .5s;
+}
+</style>

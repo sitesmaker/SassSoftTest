@@ -1,9 +1,8 @@
 import { createApp } from 'vue'
-import './assets/styles/main.css'
-import './style.css'
 import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import { createPinia } from 'pinia'
+import './style.css'
 
 const pinia = createPinia()
 

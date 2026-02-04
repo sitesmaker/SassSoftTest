@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -22,6 +26,16 @@ a:hover {
   color: #535bf2;
 }
 
+.form .v-field__input {
+  border: none;
+  min-height: 30px;
+  padding: 9px;
+}
+
+.form .v-input__details {
+  min-height: 16px;
+}
+
 body {
   margin: 0;
   display: flex;
@@ -42,16 +56,17 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #fff;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all ease-in-out .4s;
+  outline: none;
+  box-shadow: none;
 }
 button:hover {
   border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  background: #646cff;
+  color: #fff;
+  transition: all ease-in-out .4s;
 }
 
 .card {
@@ -63,22 +78,17 @@ button:focus-visible {
   width: 100%;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
 }
 
 .v-text-field input {
   background: transparent;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }

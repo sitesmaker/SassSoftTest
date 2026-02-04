@@ -9,10 +9,20 @@ const formRowsStore = useFormRowsStore();
   <div class="flex items-center gap-x-[10px]">
     <h2>Учётные записи</h2>
     <v-btn
+      color="primary"
       icon="mdi-plus"
       @click="formRowsStore.addRow()"
-      />
+    />
   </div>
+  <transition name="fade">
+    <div
+      class="flex items-center gap-x-[10px] px-[16px] py-[8px] mb-[20px] bg-[#333] rounded-[30px]"
+      v-if="formRowsStore.formRows.length"
+    >
+      <v-icon>mdi-help-circle-outline</v-icon>
+      <span>Для указания нескольких меток для одной пары логин/пароль используейте разделитель ;</span>
+    </div>
+  </transition>
   <Form />
 </template>
 
